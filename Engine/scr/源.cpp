@@ -4,8 +4,8 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <string.h>
+#include "../include/shader.h"
 using namespace std;
-
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -40,82 +40,32 @@ int main()
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	const char* vertexShaderSource = "\
-        #version 330 core     \n\
-        layout (location = 0) in vec3 aPos;   // λ�ñ���������λ��ֵΪ 0 \n\
-		layout(location = 1) in vec3 aColor; // ��ɫ����������λ��ֵΪ 1\n\
-		out vec3 ourColor; // ��Ƭ����ɫ�����һ����ɫ\n\
-        void main() \n\
-        { \n\
-            gl_Position = vec4(aPos, 1.0); \n\
-			ourColor = aColor; // ��ourColor����Ϊ���ǴӶ�����������õ���������ɫ \n\
-        }";
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-	int  success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-		cout << vertexShaderSource << endl;
-	}
-
-	const char* fragmentShaderSource =
-		"#version 330 core\n\
-         out vec4 FragColor;\n\
-		 in vec3 ourColor;\n\
-         void main()\n\
-         {\n\
-             FragColor = ourColor;\n\
-         }\n\
-        ";
-
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-		cout << fragmentShaderSource << endl;
-	}
-
 	int nrAttributes;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
 	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
 
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	string shaderFloder = "E:\\workspace\\OpenGL\\Engine\\Engine\\Shader\\";
+	Shader ourShader((shaderFloder + "shader.vs").c_str(), (shaderFloder + "shader.fs").c_str());
+	/*glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
 	if (!success) {
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
 	}
-	glUseProgram(shaderProgram);
-
+	glUseProgram(shaderProgram);*/
+	ourShader.use(); 
 
 	float vertices[] = {
-		// λ��              // ��ɫ
-		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // ����
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // ����
-		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // ����
+		// 位置              // 颜色
+		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // 右下
+		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // 左下
+		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // 顶部
 	};
-	unsigned int indices[] = { // ע��������0��ʼ! 
-	 0, 1, 3, // ��һ��������
+	unsigned int indices[] = { // 注意索引从0开始! 
+	 0, 1, 3, // 第一个三角形
 	};
 
 	unsigned int VBO;
 	glGenBuffers(1, &VBO);
-	// 2. �Ѷ������鸴�Ƶ������й�OpenGLʹ��
+	// 2. 把顶点数组复制到缓冲中供OpenGL使用
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
@@ -128,10 +78,10 @@ int main()
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	// λ������
+	// 位置属性
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	// ��ɫ����
+	// 颜色属性
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
@@ -153,8 +103,7 @@ int main()
 		glfwPollEvents();
 	}
 
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	
 	glfwTerminate();
 	return 0;
 }
