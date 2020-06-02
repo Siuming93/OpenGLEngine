@@ -22,6 +22,9 @@
     <ClCompile Include="scr\glad.c" />
     <ClCompile Include="scr\源.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\shader.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{8E51A560-DB92-4D20-96C3-E350D1B4ED71}</ProjectGuid>
@@ -81,6 +84,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>../Third/includes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
