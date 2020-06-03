@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="scr\glad.c" />
+    <ClCompile Include="scr\stb_image.cpp" />
     <ClCompile Include="scr\源.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\shader.h" />
+    <ClInclude Include="include\stb_image.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
