@@ -4,11 +4,13 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <string.h>
+#include <direct.h>
 #include "../include/shader.h"
 #include "../include/stb_image.h"
 using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+string GetApplicationPath();
 
 void processInput(GLFWwindow* window)
 {
@@ -45,14 +47,14 @@ int main()
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
 	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
 
-	string shaderFloder = "E:\\workspace\\OpenGL\\Engine\\Engine\\Shader\\";
+	string shaderFloder = GetApplicationPath() + "\\Shader\\";
 	Shader ourShader((shaderFloder + "shader.vs").c_str(), (shaderFloder + "shader.fs").c_str());
 	/*glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
 	if (!success) {
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
 	}
 	glUseProgram(shaderProgram);*/
-	ourShader.use(); 
+	ourShader.use();
 
 	float vertices[] = {
 		//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
@@ -63,32 +65,66 @@ int main()
 	};
 	unsigned int indices[] = { // 注意索引从0开始! 
 	 0, 1, 3, // 第一个三角形
+	 1, 2, 3,
+	};
+	float vertices1[] = {
+		//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+			 0.5f,  0.7f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+			 0.5f, -0.7f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+			-0.5f, -0.7f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+			-0.5f,  0.7f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+	};
+	unsigned int indices1[] = { // 注意索引从0开始! 
+	0, 1, 3, // 第一个三角形
 	};
 
-	unsigned int VBO;
+	unsigned int VBO, VAO, EBO;
+	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	// 2. 把顶点数组复制到缓冲中供OpenGL使用
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	/*unsigned int EBO;
-	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	// 位置属性
+	// position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	// 颜色属性
+	// color attribute
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
+	// texture coord attribute
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
+
+	unsigned int VBO1, VAO1, EBO1;
+	glGenVertexArrays(1, &VAO1);
+	glGenBuffers(1, &VBO1);
+	glGenBuffers(1, &EBO1);
+
+	glBindVertexArray(0);
+	glBindVertexArray(VAO1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO1);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO1);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices1), indices1, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
 
 
 	unsigned int texture;
@@ -101,7 +137,8 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// 加载并生成纹理
 	int width, height, nrChannels;
-	unsigned char* data = stbi_load("E:\\workspace\\OpenGL\\Engine\\Engine\\texture\\container.jpg", &width, &height, &nrChannels, 0);
+	string texPath = GetApplicationPath() + "\\texture\\container.jpg";
+	unsigned char* data = stbi_load(texPath.c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -113,11 +150,15 @@ int main()
 	}
 	stbi_image_free(data);
 
-
+	int counter = 0;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	while (!glfwWindowShouldClose(window))
 	{
+		auto showVo = counter > 20 ? VAO1 : VAO;
+		if (counter > 40)
+			counter = 0;
+		counter++;
 		// input
 		// -----
 		processInput(window);
@@ -132,7 +173,7 @@ int main()
 
 		// render container
 		ourShader.use();
-		glBindVertexArray(VAO);
+		glBindVertexArray(showVo);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -141,7 +182,7 @@ int main()
 		glfwPollEvents();
 	}
 
-	
+
 	glfwTerminate();
 	return 0;
 }
@@ -149,4 +190,16 @@ int main()
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+
+string GetApplicationPath()
+{
+	char* buffer;
+	//也可以将buffer作为输出参数
+	if ((buffer = _getcwd(NULL, 0)) == NULL)
+	{
+		perror("getcwd error");
+	}
+	return string(buffer);
 }
