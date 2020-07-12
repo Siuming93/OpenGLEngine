@@ -6,6 +6,7 @@
 class LightPipeline :public BasePipeline
 {
 	Shader* shader;
+	Shader* lightProxyShader;
 
 	unsigned int VAO;
 

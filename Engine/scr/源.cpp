@@ -5,12 +5,13 @@
 #include <stdio.h>
 #include <stdio.h>
 #include <iostream>
+#include <conio.h>
 #include "../include/BasePipeline.hpp"
 #include "../GettingStart/GettingStartPipeline.h"
 #include "../Light/LightPipeline.h"
 using namespace std;
 
-int main()
+void Run()
 {
 	BasePipeline* pipeline = NULL;
 	int type = 1;
@@ -28,10 +29,29 @@ int main()
 
 	auto r = pipeline->Init();
 	if (!r)
-		return 0;
+		return;
 
 	pipeline->Loop();
+}
 
+int main()
+{
+	while (true)
+	{
+		Run();
+
+		cout << "渲染已经结束,按下回车重新启动.." << endl;
+
+		while (true)
+		{
+			int code = _getch();
+			if (code == 10)
+				break;
+
+			if (code == 27 || code == 3)
+				return 0;
+		}
+	}
 	return 0;
 }
 
