@@ -17,5 +17,5 @@ void main()
     //gl_Position = vec4(aPos, 1.0);
     ourColor = (model * vec4(aPos, 1.0f)).rgb;
     FragPos = (model * vec4(aPos, 1.0)).xyz;
-    Normal = aNormal;
+    Normal = mat3(transpose(inverse(model))) * aNormal;
 }

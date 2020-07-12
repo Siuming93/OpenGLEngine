@@ -40,16 +40,19 @@ int main()
 	{
 		Run();
 
-		cout << "渲染已经结束,按下回车重新启动.." << endl;
+		cout << "渲染已结束,按下回车键重新启动..." << endl;
 
 		while (true)
 		{
 			int code = _getch();
-			if (code == 10)
+			//cout << code << endl;
+
+			if (code == 13)
 				break;
 
 			if (code == 27 || code == 3)
 				return 0;
+
 		}
 	}
 	return 0;

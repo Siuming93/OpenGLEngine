@@ -39,18 +39,29 @@ void LightPipeline::Update()
 	glm::mat4 view = cam->GetViewMatrix();
 
 	vec3 pos1(0, 0, -5);
-	vec3 lightPos(1, 1, -3);
+	vec3 lightPos(0.3, 0, -3);
+	vec3 lightColor(1.0f, 1.0f, 1.0f);
+
+	lightColor.x = sin(glfwGetTime() * 2.0f);
+	lightColor.y = sin(glfwGetTime() * 0.7f);
+	lightColor.z = sin(glfwGetTime() * 1.3f);
 
 	// create transformations
 	shader->use();
 	shader->setMat4("projection", glm::value_ptr(projection));
 	shader->setMat4("view", glm::value_ptr(view));
-	shader->SetVec3("lightColor", 1, 1.0, 1.0);
 	mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, pos1);
 	shader->setMat4("model", glm::value_ptr(model));
-	shader->SetVec3("objectColor", 1.0f, 0.5f, 0.31f);
-	shader->SetVec3("lightPos", lightPos.x, lightPos.y, lightPos.z);
+	shader->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+	shader->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+	shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+	shader->setFloat("material.shininess", 32.0f);
+	shader->setVec3("light.ambient", 0.2f * lightColor);
+	shader->setVec3("light.diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
+	shader->setVec3("light.specular", lightColor);
+	shader->setVec3("light.position", lightPos);
+	shader->setVec3("viewPos", cam->Position.x, cam->Position.y, cam->Position.z);
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -58,7 +69,7 @@ void LightPipeline::Update()
 	lightProxyShader->use();
 	lightProxyShader->setMat4("projection", glm::value_ptr(projection));
 	lightProxyShader->setMat4("view", glm::value_ptr(view));
-	lightProxyShader->SetVec3("lightColor", 1, 1.0, 1.0);
+	lightProxyShader->setVec3("lightColor", 1, 1.0, 1.0);
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, lightPos);
 	model = glm::scale(model, glm::vec3(0.2f));
