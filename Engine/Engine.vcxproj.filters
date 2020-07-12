@@ -24,6 +24,18 @@
     <ClCompile Include="scr\stb_image.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Light\LightPipeline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GettingStart\GettingStartPipeline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\BasePipeline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Shader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\shader.h">
@@ -35,5 +47,20 @@
     <ClInclude Include="include\camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\BasePipeline.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\LightPipeline.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GettingStart\GettingStartPipeline.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\Light.Color.fs" />
+    <None Include="Shader\Light.Color.vs" />
+    <None Include="Shader\Shader.fs" />
+    <None Include="Shader\Shader.vs" />
   </ItemGroup>
 </Project>
