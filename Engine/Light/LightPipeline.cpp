@@ -43,7 +43,7 @@ void LightPipeline::Update()
 	shader->SetVec3("lightColor", 1.0, 1.0, 1.0);
 
 	vec3 pos1(0, 0, -5);
-	vec3 pos2(1.5, 1.5, -7);
+	vec3 pos2(1, 1, -5);
 
 	mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, pos1);
@@ -54,6 +54,7 @@ void LightPipeline::Update()
 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, pos2);
+	model = glm::scale(model, glm::vec3(0.2f));
 	shader->setMat4("model", glm::value_ptr(model));
 	shader->SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
 	glBindVertexArray(VAO);

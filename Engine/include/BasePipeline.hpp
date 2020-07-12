@@ -51,6 +51,7 @@ public:
 protected:
 
 	bool firstMouse = true;
+	bool mousePress = false;
 	float yaw = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
 	float pitch = 0.0f;
 	float lastX = 800.0f / 2.0;
@@ -62,6 +63,8 @@ protected:
 	// glfw: whenever the mouse moves, this callback is called
 	// -------------------------------------------------------
 	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
+	static void mouse_btn_callback(GLFWwindow* window, int index, int state, int mod);
 
 	// glfw: whenever the mouse scroll wheel scrolls, this callback is called
 	// ----------------------------------------------------------------------

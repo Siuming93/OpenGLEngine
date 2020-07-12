@@ -21,6 +21,7 @@ int BasePipeline::InitWindow()
 	glfwMakeContextCurrent(window);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetMouseButtonCallback(window, mouse_btn_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -82,6 +83,13 @@ void BasePipeline::ProcessInput()
 		(*cam).ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		(*cam).ProcessKeyboard(RIGHT, deltaTime);
+
+	if (glfwGetKey(window, GLFW_KEY_F8) == GLFW_PRESS)
+	{
+		if (cam != NULL)
+			delete cam;
+		cam = new Camera;
+	}
 }
 
 BasePipeline::BasePipeline()
@@ -137,6 +145,10 @@ unsigned int BasePipeline::LoadTex(string path)
 
 inline void BasePipeline::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	if (!m_curInstance->mousePress)
+	{
+		return;
+	}
 	if (m_curInstance->firstMouse)
 	{
 		m_curInstance->lastX = xpos;
@@ -149,7 +161,7 @@ inline void BasePipeline::mouse_callback(GLFWwindow* window, double xpos, double
 	m_curInstance->lastX = xpos;
 	m_curInstance->lastY = ypos;
 
-	float sensitivity = 0.1f; // change this value to your liking
+	float sensitivity = 2.0f; // change this value to your liking
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
 
@@ -167,6 +179,20 @@ inline void BasePipeline::mouse_callback(GLFWwindow* window, double xpos, double
 	front.y = sin(glm::radians(m_curInstance->pitch));
 	front.z = sin(glm::radians(m_curInstance->yaw)) * cos(glm::radians(m_curInstance->pitch));
 	(*m_curInstance->cam).ProcessMouseMovement(xoffset, yoffset);
+}
+
+inline void BasePipeline::mouse_btn_callback(GLFWwindow* window, int index, int state, int mod)
+{
+	if (index == GLFW_MOUSE_BUTTON_2 && state == GLFW_PRESS && !m_curInstance->mousePress)
+	{
+		m_curInstance->firstMouse = true;
+		m_curInstance->mousePress = true;
+	}
+
+	if (index == GLFW_MOUSE_BUTTON_2 && state == GLFW_RELEASE && m_curInstance->mousePress)
+	{
+		m_curInstance->mousePress = false;
+	}
 }
 
 inline void BasePipeline::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
