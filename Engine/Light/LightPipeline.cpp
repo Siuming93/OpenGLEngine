@@ -8,7 +8,7 @@ bool LightPipeline::Init()
 		return false;
 
 	string shaderFloder = GetApplicationPath() + "\\Shader\\";
-	shader = new Shader((shaderFloder + "Light.Color.vs").c_str(), (shaderFloder + "Light.FlashLight.fs").c_str());
+	shader = new Shader((shaderFloder + "Light.Color.vs").c_str(), (shaderFloder + "Light.MultipleLights.fs").c_str());
 	lightProxyShader = new Shader((shaderFloder + "Light.Color.vs").c_str(), (shaderFloder + "Light.LightProxy.fs").c_str());
 	VAO = GetCubeVAO();
 	string textFolder = GetApplicationPath() + "\\Texture\\";
@@ -64,6 +64,13 @@ void LightPipeline::Update()
 	vec3 lightDirection(-1.0, -1.0, -1.0);
 	vec3 lightColor(1.0f, 1.0f, 1.0f);
 
+	glm::vec3 pointLightPositions[] = {
+	glm::vec3(0.7f,  0.2f,  2.0f),
+	glm::vec3(2.3f, -3.3f, -4.0f),
+	glm::vec3(-4.0f,  2.0f, -12.0f),
+	glm::vec3(0.0f,  0.0f, -3.0f)
+	};
+
 	/*lightColor.x = sin(glfwGetTime() * 2.0f);
 	lightColor.y = sin(glfwGetTime() * 0.7f);
 	lightColor.z = sin(glfwGetTime() * 1.3f);*/
@@ -75,16 +82,45 @@ void LightPipeline::Update()
 	shader->setInt("material.diffuse", 0);
 	shader->setInt("material.specular", 1);
 	shader->setFloat("material.shininess", 32.0f);
-	shader->setVec3("light.ambient", 0.2f * lightColor);
-	shader->setVec3("light.diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
-	shader->setVec3("light.specular", lightColor);
-	shader->setVec3("light.position", cam->Position);
-	shader->setVec3("light.direction", cam->Front);
-	shader->setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-	shader->setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
-	shader->setFloat("light.constant", 1.0f);
-	shader->setFloat("light.linear", 0.09f);
-	shader->setFloat("light.quadratic", 0.032f);
+	shader->setVec3("ambient", 0.2f * lightColor);
+	shader->setVec3("dirLight.diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
+	shader->setVec3("dirLight.specular", lightColor);
+	shader->setVec3("dirLight.direction", lightDirection);
+	shader->setVec3("flashLight.diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
+	shader->setVec3("flashLight.specular", lightColor);
+	shader->setVec3("flashLight.position", cam->Position);
+	shader->setVec3("flashLight.direction", cam->Front);
+	shader->setFloat("flashLight.cutOff", glm::cos(glm::radians(12.5f)));
+	shader->setFloat("flashLight.outerCutOff", glm::cos(glm::radians(17.5f)));
+	shader->setFloat("flashLight.constant", 1.0f);
+	shader->setFloat("flashLight.linear", 0.09f);
+	shader->setFloat("flashLight.quadratic", 0.032f);
+	shader->setVec3("pointLights[0].diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
+	shader->setVec3("pointLights[0].specular", lightColor);
+	shader->setVec3("pointLights[0].position", pointLightPositions[0]);
+	shader->setFloat("pointLights[0].constant", 1.0f);
+	shader->setFloat("pointLights[0].linear", 0.09f);
+	shader->setFloat("pointLights[0].quadratic", 0.032f);
+	shader->setVec3("pointLights[1].diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
+	shader->setVec3("pointLights[1].specular", lightColor);
+	shader->setVec3("pointLights[1].position", pointLightPositions[1]);
+	shader->setFloat("pointLights[1].constant", 1.0f);
+	shader->setFloat("pointLights[1].linear", 0.09f);
+	shader->setFloat("pointLights[1].quadratic", 0.032f);
+	shader->setVec3("pointLights[2].diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
+	shader->setVec3("pointLights[2].specular", lightColor);
+	shader->setVec3("pointLights[2].position", pointLightPositions[2]);
+	shader->setFloat("pointLights[2].constant", 1.0f);
+	shader->setFloat("pointLights[2].linear", 0.09f);
+	shader->setFloat("pointLights[2].quadratic", 0.032f);
+	shader->setVec3("pointLights[3].diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
+	shader->setVec3("pointLights[3].specular", lightColor);
+	shader->setVec3("pointLights[3].position", pointLightPositions[3]);
+	shader->setFloat("pointLights[3].constant", 1.0f);
+	shader->setFloat("pointLights[3].linear", 0.09f);
+	shader->setFloat("pointLights[3].quadratic", 0.032f);
+
+
 	shader->setVec3("viewPos", cam->Position.x, cam->Position.y, cam->Position.z);
 
 	int i = 0;
@@ -93,22 +129,27 @@ void LightPipeline::Update()
 		mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, pos + pos1);
 		float angle = 20.0f * i++;
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f) + glm::radians(angle + 0), glm::vec3(0.5f, 1.0f, 0.0f));
+		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f) + glm::radians(angle + 0), glm::vec3(0.5f, 1.0f, 0.0f));
+		model = glm::rotate(model,  glm::radians(50.0f) + glm::radians(angle + 0), glm::vec3(0.5f, 1.0f, 0.0f));
 		shader->setMat4("model", glm::value_ptr(model));
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
-	lightProxyShader->use();
-	lightProxyShader->setMat4("projection", glm::value_ptr(projection));
-	lightProxyShader->setMat4("view", glm::value_ptr(view));
-	lightProxyShader->setVec3("lightColor", 1, 1.0, 1.0);
-	mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, lightPos);
-	model = glm::scale(model, glm::vec3(0.2f));
-	lightProxyShader->setMat4("model", glm::value_ptr(model));
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	for (vec3 pos: pointLightPositions)
+	{
+		lightProxyShader->use();
+		lightProxyShader->setMat4("projection", glm::value_ptr(projection));
+		lightProxyShader->setMat4("view", glm::value_ptr(view));
+		lightProxyShader->setVec3("lightColor", 1, 1.0, 1.0);
+		mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, pos);
+		model = glm::scale(model, glm::vec3(0.2f));
+		lightProxyShader->setMat4("model", glm::value_ptr(model));
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
+	
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();
