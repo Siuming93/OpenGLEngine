@@ -21,8 +21,10 @@
   <ItemGroup>
     <ClCompile Include="GettingStart\GettingStartPipeline.cpp" />
     <ClCompile Include="Light\LightPipeline.cpp" />
+    <ClCompile Include="ModelLoad\modelLoadPipeline.cpp" />
     <ClCompile Include="scr\BasePipeline.cpp" />
     <ClCompile Include="scr\glad.c" />
+    <ClCompile Include="scr\model.cpp" />
     <ClCompile Include="scr\Shader.cpp" />
     <ClCompile Include="scr\stb_image.cpp" />
     <ClCompile Include="scr\源.cpp" />
@@ -31,15 +33,20 @@
     <ClInclude Include="GettingStart\GettingStartPipeline.h" />
     <ClInclude Include="include\BasePipeline.hpp" />
     <ClInclude Include="include\camera.h" />
+    <ClInclude Include="include\Model.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="Light\LightPipeline.h" />
+    <ClInclude Include="ModelLoad\modelLoadPipeLine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Light.Color.fs" />
     <None Include="Shader\Light.Color.vs" />
     <None Include="Shader\Shader.fs" />
     <None Include="Shader\Shader.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\Third\Libs\assimp.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

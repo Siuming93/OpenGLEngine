@@ -15,6 +15,7 @@
 #include "shader.h"
 #include "camera.h"
 #include "stb_image.h"
+#include "model.h"
 
 using namespace std;
 using namespace glm;

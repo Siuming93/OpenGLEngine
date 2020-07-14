@@ -36,6 +36,12 @@
     <ClCompile Include="scr\Shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ModelLoad\modelLoadPipeline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\model.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\shader.h">
@@ -56,11 +62,20 @@
     <ClInclude Include="GettingStart\GettingStartPipeline.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\Model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoad\modelLoadPipeLine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Light.Color.fs" />
     <None Include="Shader\Light.Color.vs" />
     <None Include="Shader\Shader.fs" />
     <None Include="Shader\Shader.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\Third\Libs\assimp.lib" />
   </ItemGroup>
 </Project>

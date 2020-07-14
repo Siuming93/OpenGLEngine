@@ -9,12 +9,13 @@
 #include "../include/BasePipeline.hpp"
 #include "../GettingStart/GettingStartPipeline.h"
 #include "../Light/LightPipeline.h"
+#include "../ModelLoad/modelLoadPipeLine.h"
 using namespace std;
 
 void Run()
 {
 	BasePipeline* pipeline = NULL;
-	int type = 1;
+	int type = 2;
 	switch (type)
 	{
 	case 0:
@@ -22,6 +23,9 @@ void Run()
 		break;
 	case 1:
 		pipeline = new LightPipeline;
+		break;
+	case 2:
+		pipeline = new ModelLoadPipeline;
 		break;
 	default:
 		break;
