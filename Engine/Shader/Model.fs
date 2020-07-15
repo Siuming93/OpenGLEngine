@@ -128,9 +128,9 @@ void main()
         light += CalcPointLight(pointLights[i], FragPos, norm, viewDir);
     light += CalcFlashLight(flashLight, FragPos, norm, viewDir);
 
-    vec3 result = (light + ambient + vec3(0.5,0.5,0.5)) * color;
+    vec3 result = (0.0 * (light + ambient ) + vec3(0.5,0.5,0.5))* color;
 
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(result, 1.0);
 
     //FragColor = vec4(ourColor, 1.0);
 }
