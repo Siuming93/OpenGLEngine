@@ -4,6 +4,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm\gtc\type_ptr.hpp>
 
 #include<string>
 #include<fstream>
@@ -27,5 +28,6 @@ public:
 	void setVec3(const std::string name, float v1, float v2, float v3) const;
 	void setVec3(const std::string name, glm::vec3 value) const;
 	void setMat4(const std::string& name, const float* value) const;
+	void setMat4(const std::string& name, glm::mat4 value) const;
 };
 #endif // ! SHADER_H
