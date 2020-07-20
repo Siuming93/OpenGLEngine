@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Advanced\advancedPipeline.cpp" />
     <ClCompile Include="GettingStart\GettingStartPipeline.cpp" />
     <ClCompile Include="Light\LightPipeline.cpp" />
     <ClCompile Include="ModelLoad\modelLoadPipeline.cpp" />
@@ -30,6 +31,7 @@
     <ClCompile Include="scr\源.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Advanced\advancedPipeline.h" />
     <ClInclude Include="GettingStart\GettingStartPipeline.h" />
     <ClInclude Include="include\BasePipeline.hpp" />
     <ClInclude Include="include\camera.h" />

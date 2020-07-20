@@ -15,6 +15,9 @@ public:
 	bool Init();
 	void Release();
 	void Update();
+private:
+	unsigned int GetCubeVAO();
+	unsigned int GetPlaneVAO();
 };
 
 #endif // !__ADVANCE_PIPELINE_HEADER__
