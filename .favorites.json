@@ -1,0 +1,19 @@
+[
+    {
+        "type": "Directory",
+        "name": "e:\\workspace\\OpenGL\\Engine\\Engine",
+        "parent_id": null,
+        "fsPath": "e:\\workspace\\OpenGL\\Engine\\Engine",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "M7uxK1zCotnQ8f5L"
+    },
+    {
+        "type": "Group",
+        "name": "engine",
+        "parent_id": null,
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "vMIUALEyaHrY4Rw3"
+    }
+]

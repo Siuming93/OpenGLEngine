@@ -19,6 +19,7 @@ public:
 
 	//构造器读取并构建着色器
 	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+	Shader(const std::string& vertexPath, const std::string& fragmentPath);
 	//使用,激活
 	void use();
 	//uniform工具
@@ -29,5 +30,7 @@ public:
 	void setVec3(const std::string name, glm::vec3 value) const;
 	void setMat4(const std::string& name, const float* value) const;
 	void setMat4(const std::string& name, glm::mat4 value) const;
+private:
+	void Init(const GLchar* vertexPath, const GLchar* fragmentPath);
 };
 #endif // ! SHADER_H

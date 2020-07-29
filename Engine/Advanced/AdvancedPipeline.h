@@ -10,11 +10,14 @@ private:
 	unsigned int floorTexture;
 	unsigned int cubeVAO, planeVAO;
 	Shader* shader;
+	Shader* singleColorShader;
 
 public:
 	bool Init();
 	void Release();
 	void Update();
+	void DrawPlane();
+	void DrawTwoContainers(Shader* shader, glm::mat4& model, glm::vec3 scale);
 private:
 	unsigned int GetCubeVAO();
 	unsigned int GetPlaneVAO();

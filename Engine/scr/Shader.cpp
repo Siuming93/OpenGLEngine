@@ -1,7 +1,16 @@
 #include "../include/shader.h"
 
-
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
+{
+	Init(vertexPath, fragmentPath);
+}
+
+Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
+{
+	Init(vertexPath.c_str(), fragmentPath.c_str());
+}
+
+void Shader::Init(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
 	//1.从文件路径中获取顶点/片段着色器
 	std::string vertexCode;
@@ -48,7 +57,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	if (!success)
 	{
 		glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::cout << vertexPath << std::endl << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
 	//片段着色器
@@ -60,7 +69,8 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	if (!success)
 	{
 		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::cout << fragmentPath << std::endl;
+		std::cout<< "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
 	//着色器程序

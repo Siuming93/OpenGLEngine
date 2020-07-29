@@ -14,7 +14,8 @@ bool AdvancedPipeline::Init()
 	floorTexture = LoadTex(GetApplicationPath() + "\\texture\\metal.png");
 
 	string shaderFloder = GetApplicationPath() + "\\Shader\\";
-	shader = new Shader((shaderFloder + "Advanced.DepthTesting.vs").c_str(), (shaderFloder + "Advanced.DepthTesting.fs").c_str());
+	shader = new Shader(shaderFloder + "Advanced.Stencil.vs", shaderFloder + "Advanced.Stencil.fs");
+	singleColorShader = new Shader(shaderFloder + "Advanced.SingleColor.vs", shaderFloder + "Advanced.SingleColor.fs");
 
 	// configure global opengl state
 	// -----------------------------
@@ -22,9 +23,9 @@ bool AdvancedPipeline::Init()
 	cubeVAO = GetCubeVAO();
 	planeVAO = GetPlaneVAO();
 
-	glDepthFunc(GL_ALWAYS); // always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
+	//glDepthFunc(GL_ALWAYS); // always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
 	glEnable(GL_DEPTH_TEST);
-
+	glEnable(GL_STENCIL_TEST);
 }
 
 
@@ -39,42 +40,77 @@ void AdvancedPipeline::Update()
 {
 	BasePipeline::Update();
 
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-	shader->use();
-	shader->setInt("texture1", 0);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view = cam->GetViewMatrix();
 	glm::mat4 projection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+
+	shader->use();
+	shader->setInt("texture1", 0);
 	shader->setMat4("view", view);
 	shader->setMat4("projection", projection);
 
-	// cubes
-	glBindVertexArray(cubeVAO);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, cubeTexture); 
-	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-	shader->setMat4("model", model);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-	shader->setMat4("model", model);
-	glDrawArrays(GL_TRIANGLES, 0, 36);  
+	glStencilMask(0x00); // 记得保证我们在绘制地板的时候不会更新模板缓冲
+	shader->use();
+	DrawPlane();
 
-	// floor
-	glBindVertexArray(planeVAO);
-	glBindTexture(GL_TEXTURE_2D, floorTexture);
-	shader->setMat4("model", glm::mat4(1.0f));
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+
+	glStencilFunc(GL_ALWAYS, 0xFF, 0xFF); // 所有的片段都应该更新模板缓冲
+	glStencilMask(0xF0); // 启用模板缓冲写入
+	DrawTwoContainers(shader, model, glm::vec3(1, 1, 1));
+
+	glStencilFunc(GL_NOTEQUAL, 0xF0, 0xFF);
+	glStencilMask(0x00);
+	//glDisable(GL_DEPTH_TEST);
+	singleColorShader->use();
+	singleColorShader->setMat4("view", view);
+	singleColorShader->setMat4("projection", projection);
+	DrawTwoContainers(singleColorShader, model, glm::vec3(1.2, 1.2, 1.2));
+	glStencilMask(0xFF);
+	//glEnable(GL_DEPTH_TEST);
+
+
 
 	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 	// -------------------------------------------------------------------------------
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 
+}
+
+void AdvancedPipeline::DrawPlane()
+{
+	// floor
+	glBindVertexArray(planeVAO);
+	glBindTexture(GL_TEXTURE_2D, floorTexture);
+	shader->setMat4("model", glm::mat4(1.0f));
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+}
+
+void AdvancedPipeline::DrawTwoContainers(Shader* shader, glm::mat4& model, glm::vec3 scale)
+{
+	// cubes
+	glBindVertexArray(cubeVAO);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, cubeTexture);
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+	model = glm::scale(model, scale);
+	shader->setMat4("model", model);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+	model = glm::scale(model, scale);
+	shader->setMat4("model", model);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 unsigned int AdvancedPipeline::GetCubeVAO()
@@ -163,7 +199,7 @@ unsigned AdvancedPipeline::GetPlaneVAO()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)) );
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glBindVertexArray(0);
 	return VAO;
 }
