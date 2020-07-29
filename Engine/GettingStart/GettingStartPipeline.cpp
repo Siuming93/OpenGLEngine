@@ -7,12 +7,12 @@ bool GettingStartPipeline::Init()
 	if (!BasePipeline::Init())
 		return false;
 
-	string shaderFloder = GetApplicationPath() + "\\Shader\\";
+	string shaderFloder = GetResourcesPath() + "\\Shader\\";
 	ourShader = new Shader((shaderFloder + "shader.vs").c_str(), (shaderFloder + "shader.fs").c_str());
 	(*ourShader).use();
 
-	texture0 = LoadTex(GetApplicationPath() + "\\texture\\container.jpg");
-	texture1 = LoadTex(GetApplicationPath() + "\\texture\\awesomeface.png");
+	texture0 = LoadTex(GetResourcesPath() + "\\texture\\container.jpg");
+	texture1 = LoadTex(GetResourcesPath() + "\\texture\\awesomeface.png");
 
 	(*ourShader).setInt("ourTexture", 0);
 	(*ourShader).setInt("ourTexture1", 1);

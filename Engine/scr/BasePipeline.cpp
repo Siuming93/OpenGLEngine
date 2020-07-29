@@ -104,7 +104,7 @@ BasePipeline::~BasePipeline()
 
 #pragma region Static 
 
-string BasePipeline::GetApplicationPath()
+string BasePipeline::GetResourcesPath()
 {
 	char* buffer;
 	//也可以将buffer作为输出参数
@@ -112,7 +112,7 @@ string BasePipeline::GetApplicationPath()
 	{
 		perror("getcwd error");
 	}
-	return string(buffer);
+	return string(buffer) + "/../Resources";
 }
 unsigned int BasePipeline::LoadTex(string path)
 {

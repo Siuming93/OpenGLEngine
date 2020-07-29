@@ -5,11 +5,11 @@ bool ModelLoadPipeline::Init()
 	if (!BasePipeline::Init())
 		return false;
 
-	string shaderFloder = GetApplicationPath() + "\\Shader\\";
+	string shaderFloder = GetResourcesPath() + "\\Shader\\";
 	shader = new Shader((shaderFloder + "Model.vs").c_str(), (shaderFloder + "Model.fs").c_str());
 	cubeShader = new Shader((shaderFloder + "shader.vs").c_str(), (shaderFloder + "shader.fs").c_str());
 
-	string modelFolder = GetApplicationPath() + "\\Model\\";
+	string modelFolder = GetResourcesPath() + "\\Model\\";
 	model = new Model(modelFolder + "nanosuit/nanosuit.obj");
 }
 

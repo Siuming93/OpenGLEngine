@@ -58,7 +58,7 @@ protected:
 	float lastX = 800.0f / 2.0;
 	float lastY = 600.0 / 2.0;
 
-	string GetApplicationPath();
+	string GetResourcesPath();
 	unsigned int LoadTex(string path);
 
 	// glfw: whenever the mouse moves, this callback is called

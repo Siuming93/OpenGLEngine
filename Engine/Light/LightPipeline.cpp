@@ -7,11 +7,11 @@ bool LightPipeline::Init()
 	if (!BasePipeline::Init())
 		return false;
 
-	string shaderFloder = GetApplicationPath() + "\\Shader\\";
+	string shaderFloder = GetResourcesPath() + "\\Shader\\";
 	shader = new Shader((shaderFloder + "Light.Color.vs").c_str(), (shaderFloder + "Light.MultipleLights.fs").c_str());
 	lightProxyShader = new Shader((shaderFloder + "Light.Color.vs").c_str(), (shaderFloder + "Light.LightProxy.fs").c_str());
 	VAO = GetCubeVAO();
-	string textFolder = GetApplicationPath() + "\\Texture\\";
+	string textFolder = GetResourcesPath() + "\\Texture\\";
 	diffuseMap = LoadTex(textFolder + "container2.png");
 	specularMap = LoadTex(textFolder + "container2_specular.png");
 

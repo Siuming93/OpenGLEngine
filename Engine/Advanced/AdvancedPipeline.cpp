@@ -10,11 +10,13 @@ bool AdvancedPipeline::Init()
 
 	// load textures
 	// -------------
-	cubeTexture = LoadTex(GetApplicationPath() + "\\texture\\marble.jpg");
-	floorTexture = LoadTex(GetApplicationPath() + "\\texture\\metal.png");
+	cubeTexture = LoadTex(GetResourcesPath() + "\\texture\\marble.jpg");
+	floorTexture = LoadTex(GetResourcesPath() + "\\texture\\metal.png");
+	//grassTexture = LoadTex(GetResourcesPath() + "\\texture\\grass.png");
+	grassTexture = LoadTex(GetResourcesPath() + "\\texture\\blending_transparent_window.png");
 
-	string shaderFloder = GetApplicationPath() + "\\Shader\\";
-	shader = new Shader(shaderFloder + "Advanced.Stencil.vs", shaderFloder + "Advanced.Stencil.fs");
+	string shaderFloder = GetResourcesPath() + "\\Shader\\";
+	shader = new Shader(shaderFloder + "Advanced.AlphaTest.vs", shaderFloder + "Advanced.AlphaTest.fs");
 	singleColorShader = new Shader(shaderFloder + "Advanced.SingleColor.vs", shaderFloder + "Advanced.SingleColor.fs");
 
 	// configure global opengl state
@@ -22,10 +24,41 @@ bool AdvancedPipeline::Init()
 
 	cubeVAO = GetCubeVAO();
 	planeVAO = GetPlaneVAO();
+	vegetationVAO = GetVegetationVAO();
 
 	//glDepthFunc(GL_ALWAYS); // always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
+}
+
+unsigned int AdvancedPipeline::GetVegetationVAO()
+{
+	float transparentVertices[] = {
+		// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+		0.0f,  0.5f,  0.0f,  0.0f,  1.0f,
+		0.0f, -0.5f,  0.0f,  0.0f,  0.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  0.0f,
+
+		0.0f,  0.5f,  0.0f,  0.0f,  1.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  0.0f,
+		1.0f,  0.5f,  0.0f,  1.0f,  1.0f,
+	};  // transparent VAO
+	unsigned int transparentVAO, transparentVBO;
+	glGenVertexArrays(1, &transparentVAO);
+	glGenBuffers(1, &transparentVBO);
+	glBindVertexArray(transparentVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glBindVertexArray(0);
+	glEnable(GL_CULL_FACE);
+	//glCullFace(GL_FRONT);
+	//glCullFace(GL_BACK);
+
+	return transparentVAO;
 }
 
 
@@ -57,6 +90,67 @@ void AdvancedPipeline::Update()
 	shader->setMat4("view", view);
 	shader->setMat4("projection", projection);
 
+	//UpdateStencilTest(model, view, projection);
+
+	DrawPlane();
+
+	DrawTwoContainers(shader, model, glm::vec3(1, 1, 1));
+
+	vector<glm::vec3> vegetation;
+	vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+	vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+	vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+	vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+	vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+
+	glBindVertexArray(vegetationVAO);
+	glBindTexture(GL_TEXTURE_2D, grassTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	std::map<float, glm::vec3> sorted;
+	for (unsigned int i = 0; i < vegetation.size(); i++)
+	{
+		float distance = glm::length(cam->Position - vegetation[i]);
+		sorted[distance] = vegetation[i];
+	}
+	vector<glm::vec3> vegetation1;
+	for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
+	{
+		vegetation1.push_back(it->second);
+
+	/*	model = glm::mat4();
+		std::cout <<it->first<<"     " << it->second.x << " "<< it->second.y <<" "<< it->second.z << endl;;
+		//!!!!!!!!!!
+		//model 没有初始化
+		model = glm::translate(model, it->second);
+		shader->setMat4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, 6);*/
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, it->second);
+		shader->setMat4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+	/*for (unsigned int i = 0; i < vegetation1.size(); i++)
+	{
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, vegetation1[i]);
+		shader->setMat4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}*/
+
+	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+	// -------------------------------------------------------------------------------
+	glfwSwapBuffers(window);
+	glfwPollEvents();
+
+}
+
+void AdvancedPipeline::UpdateStencilTest(glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
+{
 	glStencilMask(0x00); // 记得保证我们在绘制地板的时候不会更新模板缓冲
 	shader->use();
 	DrawPlane();
@@ -68,21 +162,13 @@ void AdvancedPipeline::Update()
 
 	glStencilFunc(GL_NOTEQUAL, 0xF0, 0xFF);
 	glStencilMask(0x00);
-	//glDisable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
 	singleColorShader->use();
 	singleColorShader->setMat4("view", view);
 	singleColorShader->setMat4("projection", projection);
 	DrawTwoContainers(singleColorShader, model, glm::vec3(1.2, 1.2, 1.2));
 	glStencilMask(0xFF);
-	//glEnable(GL_DEPTH_TEST);
-
-
-
-	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-	// -------------------------------------------------------------------------------
-	glfwSwapBuffers(window);
-	glfwPollEvents();
-
+	glEnable(GL_DEPTH_TEST);
 }
 
 void AdvancedPipeline::DrawPlane()
