@@ -11,13 +11,20 @@ private:
 	unsigned int grassTexture;
 	unsigned int cubeVAO, planeVAO;
 	unsigned int vegetationVAO;
+	GLuint quadVAO;
+	unsigned int framebuffer;
+	GLuint textureColorbuffer;
 	Shader* shader;
 	Shader* singleColorShader;
+	Shader* postShader;
 
 public:
 	bool Init();
+	void InitFrameBuffer();
 	void Release();
 	void Update();
+
+	void DrawScene();
 
 private:
 	void DrawPlane();
@@ -26,6 +33,8 @@ private:
 	unsigned int GetCubeVAO();
 	unsigned int GetPlaneVAO();
 	unsigned int GetVegetationVAO();
+	GLuint generateAttachmentTexture(GLboolean depth, GLboolean stencil);
+	GLuint GetQuadVAO();
 
 };
 
