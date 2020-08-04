@@ -14,11 +14,15 @@ bool AdvancedPipeline::Init()
 	floorTexture = LoadTex(GetResourcesPath() + "\\texture\\metal.png");
 	//grassTexture = LoadTex(GetResourcesPath() + "\\texture\\grass.png");
 	grassTexture = LoadTex(GetResourcesPath() + "\\texture\\blending_transparent_window.png");
+	cubeMapTexture = LoadCubeMap();
+
+
 
 	string shaderFloder = GetResourcesPath() + "\\Shader\\";
 	shader = new Shader(shaderFloder + "Advanced.AlphaTest.vs", shaderFloder + "Advanced.AlphaTest.fs");
 	singleColorShader = new Shader(shaderFloder + "Advanced.SingleColor.vs", shaderFloder + "Advanced.SingleColor.fs");
-	postShader = new Shader(shaderFloder + "Advanced.PostEffect.vs", shaderFloder + "Advanced.PostEffect.fs");
+	postShader = new Shader(shaderFloder + "Advanced.NonePostEffect.vs", shaderFloder + "Advanced.NonePostEffect.fs");
+	skyboxShader = new Shader(shaderFloder + "Advanced.CubeMap.vs", shaderFloder + "Advanced.CubeMap.fs");
 	// configure global opengl state
 	// -----------------------------
 
@@ -26,13 +30,19 @@ bool AdvancedPipeline::Init()
 	planeVAO = GetPlaneVAO();
 	vegetationVAO = GetVegetationVAO();
 	quadVAO = GetQuadVAO();
+	skyboxVAO = GetSkyboxVAO();
 
 	InitFrameBuffer();
 
 	//glDepthFunc(GL_ALWAYS); // always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
+
+
+
 }
+
+
 
 void AdvancedPipeline::Release()
 {
@@ -45,12 +55,16 @@ void AdvancedPipeline::Update()
 {
 	BasePipeline::Update();
 
+
+
 	// First pass
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
 	glEnable(GL_DEPTH_TEST);
 
+
+	DrawSkybox();
 	DrawScene();
 
 	// Second pass
@@ -78,6 +92,23 @@ void AdvancedPipeline::Update()
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 
+}
+
+void AdvancedPipeline::DrawSkybox()
+{
+	glDepthMask(GL_FALSE);
+	skyboxShader->use();
+	glm::mat4 model = glm::mat4(1.0f);
+	glm::mat4 view = mat3(cam->GetViewMatrix());
+	glm::mat4 projection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);	glBindVertexArray(skyboxVAO);
+
+	skyboxShader->setMat4("view", view);
+	skyboxShader->setMat4("projection", projection);
+	skyboxShader->setMat4("model", model);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDepthMask(GL_TRUE);
 }
 
 void AdvancedPipeline::DrawScene()
@@ -309,6 +340,67 @@ unsigned int AdvancedPipeline::GetVegetationVAO()
 	return transparentVAO;
 }
 
+GLuint AdvancedPipeline::GetSkyboxVAO()
+{
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+
+	// skybox VAO
+	unsigned int skyboxVAO, skyboxVBO;
+	glGenVertexArrays(1, &skyboxVAO);
+	glGenBuffers(1, &skyboxVBO);
+	glBindVertexArray(skyboxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return skyboxVAO;
+}
+
 
 GLuint AdvancedPipeline::GetQuadVAO()
 {
@@ -386,6 +478,51 @@ GLuint AdvancedPipeline::generateAttachmentTexture(GLboolean depth, GLboolean st
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return textureID;
+}
+
+bool AdvancedPipeline::LoadCubeMap()
+{
+	string texPath = GetResourcesPath() + "/texture/";
+
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	vector<string> faces = {
+		texPath + "/skybox/right.jpg",
+		texPath + "/skybox/left.jpg",
+		texPath + "/skybox/top.jpg",
+		texPath + "/skybox/bottom.jpg",
+		texPath + "/skybox/front.jpg",
+		texPath + "/skybox/back.jpg",
+	};
+
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(false);
+
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+			);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	return textureID;
 }
