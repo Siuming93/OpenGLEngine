@@ -20,6 +20,7 @@ private:
 	Shader* singleColorShader;
 	Shader* postShader;
 	Shader* skyboxShader;
+	Shader* reflectShader;
 
 public:
 	bool Init();
@@ -32,6 +33,7 @@ private:
 	void DrawScene();
 	void DrawPlane();
 	void DrawTwoContainers(Shader* shader, glm::mat4& model, glm::vec3 scale);
+	void DrawCube(glm::vec3& pos, glm::vec3& scale, Shader* shader);
 	void UpdateStencilTest(glm::mat4& model, const glm::mat4& view, const glm::mat4& projection);
 	unsigned int GetCubeVAO();
 	unsigned int GetPlaneVAO();
