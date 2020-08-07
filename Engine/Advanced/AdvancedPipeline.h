@@ -14,6 +14,7 @@ private:
 	unsigned int vegetationVAO;
 	GLuint quadVAO;
 	GLuint skyboxVAO;
+	GLuint uboMatrices;
 	unsigned int framebuffer;
 	GLuint textureColorbuffer;
 	Shader* shader;

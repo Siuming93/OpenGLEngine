@@ -30,6 +30,7 @@ public:
 	void setVec3(const std::string name, glm::vec3 value) const;
 	void setMat4(const std::string& name, const float* value) const;
 	void setMat4(const std::string& name, glm::mat4 value) const;
+	void bindUniformBuffer(const std::string& name, GLuint bufferIndex) const;
 private:
 	void Init(const GLchar* vertexPath, const GLchar* fragmentPath);
 };

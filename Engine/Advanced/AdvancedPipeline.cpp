@@ -24,6 +24,27 @@ bool AdvancedPipeline::Init()
 	postShader = new Shader(shaderFloder + "Advanced.NonePostEffect.vs", shaderFloder + "Advanced.NonePostEffect.fs");
 	skyboxShader = new Shader(shaderFloder + "Advanced.CubeMap.vs", shaderFloder + "Advanced.CubeMap.fs");
 	reflectShader = new Shader(shaderFloder + "Advanced.Refract.vs", shaderFloder + "Advanced.Refract.fs");
+
+	glGenBuffers(1, &uboMatrices);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
+
+
+
+	// Define the range of the buffer that links to a uniform binding point
+
+
+	shader->bindUniformBuffer("Matrices", 0);
+	singleColorShader->bindUniformBuffer("Matrices", 0);
+	skyboxShader->bindUniformBuffer("Matrices", 0);
+	reflectShader->bindUniformBuffer("Matrices", 0);
+
+
+
 	// configure global opengl state
 	// -----------------------------
 
@@ -56,25 +77,35 @@ void AdvancedPipeline::Update()
 {
 	BasePipeline::Update();
 
+	glm::mat4 projection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);	glBindVertexArray(skyboxVAO);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glm::mat4 view = cam->GetViewMatrix();
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 
 	// First pass
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.3f, 0.3f, 0.8f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
 	glEnable(GL_DEPTH_TEST);
 
 
 	DrawSkybox();
 	reflectShader->use();
-	reflectShader->setVec3("cameraPos", cam->Position);
 	auto pos = glm::vec3(-1, 0, -1);
 	auto scale = glm::vec3(1, 1, 1);
+	reflectShader->setVec3("cameraPos", cam->Position);
 	//DrawCube(pos, scale, shader);
 	DrawCube(pos, scale, reflectShader);
 	//DrawScene();
 
-	// Second pass
+	//Second pass
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -106,11 +137,7 @@ void AdvancedPipeline::DrawSkybox()
 	glDepthMask(GL_FALSE);
 	skyboxShader->use();
 	glm::mat4 model = glm::mat4(1.0f);
-	glm::mat4 view = mat3(cam->GetViewMatrix());
-	glm::mat4 projection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);	glBindVertexArray(skyboxVAO);
-
-	skyboxShader->setMat4("view", view);
-	skyboxShader->setMat4("projection", projection);
+	glm::mat4 noMoveView = mat3(cam->GetViewMatrix());
 	skyboxShader->setMat4("model", model);
 
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
@@ -230,8 +257,6 @@ void AdvancedPipeline::DrawCube(glm::vec3& pos, glm::vec3& scale, Shader* shader
 	model = glm::translate(model, pos);
 	model = glm::scale(model, scale);
 	shader->use();
-	shader->setMat4("view", view);
-	shader->setMat4("projection", projection);
 	shader->setMat4("model", model);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
