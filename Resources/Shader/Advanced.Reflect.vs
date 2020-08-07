@@ -16,8 +16,9 @@ uniform mat4 view;
 
 void main()
 {
-    vec4 pos = Matrices.projection * Matrices.view *model* vec4(aPos, 1.0);
+    vec4 pos = projection * view *model* vec4(aPos, 1.0);
     FragPos = (model * vec4(aPos, 1.0)).xyz;
     Normal = normal;
     gl_Position = pos.xyzw;
+    gl_Position = vec4(aPos, 1.0);
 }
