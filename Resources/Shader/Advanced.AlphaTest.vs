@@ -6,9 +6,13 @@ layout (location = 2) in vec3 aColor;
 out vec3 ourColor;
 out vec2 TexCoord;
 
-uniform mat4 view;
+layout (std140) uniform Matrices
+{
+    mat4 projection;
+    mat4 view;
+};
+
 uniform mat4 model;
-uniform mat4 projection;
 
 void main()
 {
