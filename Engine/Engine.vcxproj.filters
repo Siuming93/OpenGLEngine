@@ -45,6 +45,9 @@
     <ClCompile Include="Advanced\advancedPipeline.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Advanced\AdvancedPipeline_geometry.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\shader.h">
@@ -72,6 +75,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Advanced\advancedPipeline.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Advanced\AdvancedPipeline_geometry.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

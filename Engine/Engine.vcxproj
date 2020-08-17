@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Advanced\advancedPipeline.cpp" />
+    <ClCompile Include="Advanced\AdvancedPipeline_geometry.cpp" />
     <ClCompile Include="GettingStart\GettingStartPipeline.cpp" />
     <ClCompile Include="Light\LightPipeline.cpp" />
     <ClCompile Include="ModelLoad\modelLoadPipeline.cpp" />
@@ -32,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Advanced\advancedPipeline.h" />
+    <ClInclude Include="Advanced\AdvancedPipeline_geometry.h" />
     <ClInclude Include="GettingStart\GettingStartPipeline.h" />
     <ClInclude Include="include\BasePipeline.hpp" />
     <ClInclude Include="include\camera.h" />

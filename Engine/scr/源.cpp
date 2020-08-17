@@ -11,6 +11,7 @@
 #include "../Light/LightPipeline.h"
 #include "../ModelLoad/modelLoadPipeLine.h"
 #include "../Advanced/advancedPipeline.h"
+#include "../Advanced/AdvancedPipeline_geometry.h"
 using namespace std;
 
 void Run()
@@ -21,6 +22,7 @@ void Run()
 	pipeline = new LightPipeline;
 	pipeline = new ModelLoadPipeline;
 	pipeline = new AdvancedPipeline;
+	pipeline = new AdvancedPipeline_geometry;
 
 
 	auto r = pipeline->Init();
