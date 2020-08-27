@@ -12,6 +12,7 @@
 #include "../ModelLoad/modelLoadPipeLine.h"
 #include "../Advanced/advancedPipeline.h"
 #include "../Advanced/AdvancedPipeline_geometry.h"
+#include "../Advanced/AdvancedPipeline_instance.h"
 using namespace std;
 
 void Run()
@@ -23,6 +24,7 @@ void Run()
 	pipeline = new ModelLoadPipeline;
 	pipeline = new AdvancedPipeline;
 	pipeline = new AdvancedPipeline_geometry;
+	pipeline = new AdvancedPipeline_instance;
 
 
 	auto r = pipeline->Init();

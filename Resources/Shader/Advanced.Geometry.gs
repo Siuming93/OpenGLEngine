@@ -1,6 +1,6 @@
 #version 330 core
 layout (points) in;
-layout (line_strip, max_vertices = 5) out;
+layout (triangle_strip, max_vertices = 5) out;
 
 void build_house(vec4 position)
 {    
