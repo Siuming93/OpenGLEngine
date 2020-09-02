@@ -84,7 +84,7 @@ void BasePipeline::ProcessInput()
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		(*cam).ProcessKeyboard(RIGHT, deltaTime);
 
-	if (glfwGetKey(window, GLFW_KEY_F8) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_F8) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_F7) == GLFW_PRESS)
 	{
 		if (cam != NULL)
 			delete cam;
