@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AdvancedLighting\AdvancedLightingPipeline_BlinPhong.cpp" />
     <ClCompile Include="Advanced\advancedPipeline.cpp" />
+    <ClCompile Include="Advanced\AdvancedPipeline_antiAliasing.cpp" />
     <ClCompile Include="Advanced\AdvancedPipeline_geometry.cpp" />
     <ClCompile Include="Advanced\AdvancedPipeline_instance.cpp" />
     <ClCompile Include="GettingStart\GettingStartPipeline.cpp" />
@@ -33,7 +35,9 @@
     <ClCompile Include="scr\源.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdvancedLighting\AdvancedLightingPipeline_BlinPhong.h" />
     <ClInclude Include="Advanced\advancedPipeline.h" />
+    <ClInclude Include="Advanced\AdvancedPipeline_antiAliasing.h" />
     <ClInclude Include="Advanced\AdvancedPipeline_geometry.h" />
     <ClInclude Include="Advanced\AdvancedPipeline_instance.h" />
     <ClInclude Include="GettingStart\GettingStartPipeline.h" />

@@ -51,6 +51,12 @@
     <ClCompile Include="Advanced\AdvancedPipeline_instance.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Advanced\AdvancedPipeline_antiAliasing.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvancedLighting\AdvancedLightingPipeline_BlinPhong.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\shader.h">
@@ -84,6 +90,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Advanced\AdvancedPipeline_instance.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Advanced\AdvancedPipeline_antiAliasing.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvancedLighting\AdvancedLightingPipeline_BlinPhong.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

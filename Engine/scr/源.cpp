@@ -13,6 +13,8 @@
 #include "../Advanced/advancedPipeline.h"
 #include "../Advanced/AdvancedPipeline_geometry.h"
 #include "../Advanced/AdvancedPipeline_instance.h"
+#include "../Advanced/AdvancedPipeline_antiAliasing.h"
+#include "../AdvancedLighting/AdvancedLightingPipeline_BlinPhong.h"
 using namespace std;
 
 void Run()
@@ -25,6 +27,8 @@ void Run()
 	pipeline = new AdvancedPipeline;
 	pipeline = new AdvancedPipeline_geometry;
 	pipeline = new AdvancedPipeline_instance;
+	pipeline = new AdvancedPipeline_antiAliasing;
+	pipeline = new AdvancedLightingPipeline_BlinPhong;
 
 
 	auto r = pipeline->Init();
