@@ -10,9 +10,8 @@ bool AdvancedLightingPipeline_BlinPhong::Init()
 	planeVAO = GetPlaneVAO();
 
 	string shaderFloder = GetResourcesPath() + "\\Shader\\";
-	shader = new Shader(shaderFloder + "Advanced.Instance_antiAliasing.vs", shaderFloder + "Advanced.Instance_antiAliasing.fs");
-	textureID = LoadTex(GetResourcesPath() + "\\texture\\marble.jpg");
-
+	shader = new Shader(shaderFloder + "AdvancedLighting.BlinnPhong.vs", shaderFloder + "AdvancedLighting.BlinnPhong.fs");
+	textureID = LoadTex(GetResourcesPath() + "\\texture\\container.jpg");
 }
 
 
@@ -26,13 +25,29 @@ void AdvancedLightingPipeline_BlinPhong::Update()
 {
 	BasePipeline::Update();
 
+	glClearColor(0.3f, 0.3f, 0.8f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
+	glEnable(GL_DEPTH_TEST);
+
 	shader->use();
 
 	glBindVertexArray(planeVAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	shader->setInt("tex", 0);
+	vec3 lightPos(0.3, 0, -3);
+	vec3 lightColor(1.0f, 1.0f, 1.0f);
+
+	shader->setInt("material.diffuse", 0);
+	shader->setInt("material.specular", 0);
+	shader->setFloat("material.shininess", 32.0f);
+
+	shader->setVec3("light.diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
+	shader->setVec3("light.specular", lightColor);
+	shader->setVec3("light.position", lightPos);
+	shader->setFloat("light.constant", 1.0f);
+	shader->setFloat("light.linear", 0.09f);
+	shader->setFloat("light.quadratic", 0.032f);
 
 	glm::mat4 view = cam->GetViewMatrix();
 	glm::mat4 projection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
