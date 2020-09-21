@@ -11,7 +11,7 @@ bool AdvancedLightingPipeline_BlinPhong::Init()
 
 	string shaderFloder = GetResourcesPath() + "\\Shader\\";
 	shader = new Shader(shaderFloder + "AdvancedLighting.BlinnPhong.vs", shaderFloder + "AdvancedLighting.BlinnPhong.fs");
-	textureID = LoadTex(GetResourcesPath() + "\\texture\\container.jpg");
+	textureID = LoadTex(GetResourcesPath() + "\\texture\\wood.png");
 }
 
 
@@ -42,7 +42,7 @@ void AdvancedLightingPipeline_BlinPhong::Update()
 	shader->setInt("material.specular", 0);
 	shader->setFloat("material.shininess", 32.0f);
 
-	shader->setVec3("light.diffuse", 0.5f * lightColor); // 将光照调暗了一些以搭配场景
+	shader->setVec3("light.diffuse", lightColor); // 将光照调暗了一些以搭配场景
 	shader->setVec3("light.specular", lightColor);
 	shader->setVec3("light.position", lightPos);
 	shader->setFloat("light.constant", 1.0f);
@@ -92,9 +92,9 @@ GLuint AdvancedLightingPipeline_BlinPhong::GetPlaneVAO()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glBindVertexArray(0);
 
 	return VAO;

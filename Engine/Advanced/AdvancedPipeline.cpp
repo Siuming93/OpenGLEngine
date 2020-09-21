@@ -6,62 +6,7 @@ bool AdvancedPipeline::Init()
 	if (!BasePipeline::Init())
 		return false;
 
-
-
-	// load textures
-	// -------------
-	cubeTexture = LoadTex(GetResourcesPath() + "\\texture\\marble.jpg");
-	floorTexture = LoadTex(GetResourcesPath() + "\\texture\\metal.png");
-	//grassTexture = LoadTex(GetResourcesPath() + "\\texture\\grass.png");
-	grassTexture = LoadTex(GetResourcesPath() + "\\texture\\blending_transparent_window.png");
-	cubeMapTexture = LoadCubeMap();
-
-
-
-	string shaderFloder = GetResourcesPath() + "\\Shader\\";
-	shader = new Shader(shaderFloder + "Advanced.AlphaTest.vs", shaderFloder + "Advanced.AlphaTest.fs");
-	singleColorShader = new Shader(shaderFloder + "Advanced.SingleColor.vs", shaderFloder + "Advanced.SingleColor.fs");
-	postShader = new Shader(shaderFloder + "Advanced.NonePostEffect.vs", shaderFloder + "Advanced.NonePostEffect.fs");
-	skyboxShader = new Shader(shaderFloder + "Advanced.CubeMap.vs", shaderFloder + "Advanced.CubeMap.fs");
-	reflectShader = new Shader(shaderFloder + "Advanced.Refract.vs", shaderFloder + "Advanced.Refract.fs");
-
-	glGenBuffers(1, &uboMatrices);
-	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-
-	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
-
-
-
-	// Define the range of the buffer that links to a uniform binding point
-
-
-	shader->bindUniformBuffer("Matrices", 0);
-	singleColorShader->bindUniformBuffer("Matrices", 0);
-	skyboxShader->bindUniformBuffer("Matrices", 0);
-	reflectShader->bindUniformBuffer("Matrices", 0);
-
-
-
-	// configure global opengl state
-	// -----------------------------
-
-	cubeVAO = GetCubeVAO();
-	planeVAO = GetPlaneVAO();
-	vegetationVAO = GetVegetationVAO();
-	quadVAO = GetQuadVAO();
-	skyboxVAO = GetSkyboxVAO();
-
-	InitFrameBuffer();
-
-	//glDepthFunc(GL_ALWAYS); // always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_STENCIL_TEST);
-
-
-
 }
 
 
