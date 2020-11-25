@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdvancedLighting\AdvancedLightingPipeline_BlinPhong.cpp" />
+    <ClCompile Include="AdvancedLighting\AdvancedLightingPipeline_ToneMapping.cpp" />
     <ClCompile Include="Advanced\advancedPipeline.cpp" />
     <ClCompile Include="Advanced\AdvancedPipeline_antiAliasing.cpp" />
     <ClCompile Include="Advanced\AdvancedPipeline_geometry.cpp" />
@@ -36,18 +37,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdvancedLighting\AdvancedLightingPipeline_BlinPhong.h" />
+    <ClInclude Include="AdvancedLighting\AdvancedLightingPipeline_ToneMapping.h" />
     <ClInclude Include="Advanced\advancedPipeline.h" />
     <ClInclude Include="Advanced\AdvancedPipeline_antiAliasing.h" />
     <ClInclude Include="Advanced\AdvancedPipeline_geometry.h" />
     <ClInclude Include="Advanced\AdvancedPipeline_instance.h" />
+    <ClInclude Include="Core\Material.hpp" />
     <ClInclude Include="GettingStart\GettingStartPipeline.h" />
-    <ClInclude Include="include\BasePipeline.hpp" />
-    <ClInclude Include="include\camera.h" />
-    <ClInclude Include="include\Model.h" />
-    <ClInclude Include="include\shader.h" />
-    <ClInclude Include="include\stb_image.h" />
+    <ClInclude Include="Core\BasePipeline.hpp" />
+    <ClInclude Include="Core\camera.h" />
+    <ClInclude Include="Core\Model.h" />
+    <ClInclude Include="Core\shader.h" />
+    <ClInclude Include="Core\stb_image.h" />
     <ClInclude Include="Light\LightPipeline.h" />
     <ClInclude Include="ModelLoad\modelLoadPipeLine.h" />
+    <ClInclude Include="Pass\DrawObjectsPass.hpp" />
+    <ClInclude Include="Pass\DrawPostEffectPass.hpp" />
+    <ClInclude Include="Pass\DrawSkyboxPass.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Light.Color.fs" />
@@ -60,7 +66,7 @@
     <ProjectGuid>{8E51A560-DB92-4D20-96C3-E350D1B4ED71}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Engine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -79,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">

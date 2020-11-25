@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __ADVANCE_PIPELINE_HEADER__
 #define __ADVANCE_PIPELINE_HEADER__
-#include "../include/BasePipeline.hpp"
+#include "../Core/BasePipeline.hpp"
 
 class AdvancedPipeline : public BasePipeline
 {

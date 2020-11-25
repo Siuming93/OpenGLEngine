@@ -2,7 +2,7 @@
 #ifndef __GETTING_START_HEADER
 #define __GETTING_START_HEADER
 
-#include "../include/BasePipeline.hpp"
+#include "../Core/BasePipeline.hpp"
 
 class GettingStartPipeline :public BasePipeline
 {

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <conio.h>
-#include "../include/BasePipeline.hpp"
+#include "../Core/BasePipeline.hpp"
 #include "../GettingStart/GettingStartPipeline.h"
 #include "../Light/LightPipeline.h"
 #include "../ModelLoad/modelLoadPipeLine.h"

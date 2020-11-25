@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __LIGHT_PIPELINE_HEADER__
 #define __LIGHT_PIPELINE_HEADER__
-#include "./../include/BasePipeline.hpp"
+#include "./../Core/BasePipeline.hpp"
 #include <vector>
 #include <list>
 

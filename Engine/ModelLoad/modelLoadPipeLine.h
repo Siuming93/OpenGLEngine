@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __MODEL_LOAD_PIPELINE_HEADER_
 #define __MODEL_LOAD_PIPELINE_HEADER_
-#include "../include/basePipeline.hpp"
+#include "../Core/basePipeline.hpp"
 
 class ModelLoadPipeline : public BasePipeline
 {

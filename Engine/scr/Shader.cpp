@@ -1,4 +1,4 @@
-#include "../include/shader.h"
+#include "../Core/shader.h"
 
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 {

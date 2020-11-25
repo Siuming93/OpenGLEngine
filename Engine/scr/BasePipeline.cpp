@@ -1,4 +1,4 @@
-#include "../include/BasePipeline.hpp"
+#include "../Core/BasePipeline.hpp"
 
 static BasePipeline* m_curInstance;
 

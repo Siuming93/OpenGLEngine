@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __ADVANCED_LIGHTING_PIPELINE_BLIN_PHONG_HEADER__
 #define __ADVANCED_LIGHTING_PIPELINE_BLIN_PHONG_HEADER__
-#include "../include/BasePipeline.hpp"
+#include "../Core/BasePipeline.hpp"
 
 class AdvancedLightingPipeline_BlinPhong : public BasePipeline
 {

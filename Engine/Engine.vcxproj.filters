@@ -57,27 +57,15 @@
     <ClCompile Include="AdvancedLighting\AdvancedLightingPipeline_BlinPhong.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="AdvancedLighting\AdvancedLightingPipeline_ToneMapping.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\shader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\stb_image.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\camera.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\BasePipeline.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Light\LightPipeline.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="GettingStart\GettingStartPipeline.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Model.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ModelLoad\modelLoadPipeLine.h">
@@ -96,6 +84,36 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="AdvancedLighting\AdvancedLightingPipeline_BlinPhong.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\DrawSkyboxPass.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\DrawObjectsPass.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\DrawPostEffectPass.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="1Core\Material.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\BasePipeline.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\stb_image.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvancedLighting\AdvancedLightingPipeline_ToneMapping.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
